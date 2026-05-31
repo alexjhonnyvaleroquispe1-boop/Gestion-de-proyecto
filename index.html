@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión del Proyecto - Cierre de Brechas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f1f5f9;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Encabezado principal */
+        .main-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .main-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .main-header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        /* Secciones */
+        .section {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .section:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        .section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #3b82f6;
+            padding-left: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .section h2 i {
+            color: #3b82f6;
+            font-size: 1.6rem;
+        }
+
+        /* Grid para tarjetas de integrantes */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .card {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 1rem;
+            padding: 1.2rem;
+            border-left: 4px solid #3b82f6;
+            transition: all 0.2s;
+        }
+        .card:hover {
+            background: rgba(30, 41, 59, 0.95);
+            transform: translateY(-3px);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+        }
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .card-header h3 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+        .role-badge {
+            background: #334155;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #cbd5e1;
+        }
+        .checklist {
+            list-style: none;
+            margin-top: 0.8rem;
+            padding-left: 0;
+        }
+        .checklist li {
+            font-size: 0.85rem;
+            padding: 0.3rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .checklist li::before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        /* Cronograma (timeline columnas) */
+        .timeline-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .week-column {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 1rem;
+            padding: 1rem;
+            border-left: 4px solid #3b82f6;
+        }
+        .week-title {
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #60a5fa;
+        }
+        .week-title span {
+            font-size: 0.8rem;
+            font-weight: normal;
+            color: #94a3b8;
+            display: block;
+        }
+        .task-item {
+            background: #1e293b;
+            padding: 0.8rem;
+            border-radius: 0.6rem;
+            margin-bottom: 0.8rem;
+        }
+        .task-item strong {
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+        .res-pill {
+            background: #3b82f6;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            color: white;
+        }
+
+        /* Grid de dos columnas para validación y riesgos */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Tarjetas de riesgos */
+        .risk-card {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 5px solid;
+        }
+        .risk-alto { border-left-color: #ef4444; }
+        .risk-medio { border-left-color: #f59e0b; }
+        .risk-bajo { border-left-color: #10b981; }
+        .risk-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .risk-metrics {
+            display: flex;
+            gap: 0.8rem;
+            margin: 0.5rem 0;
+            flex-wrap: wrap;
+        }
+        .metric-tag {
+            background: #334155;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .bg-yellow { background: #f59e0b; color: #0f172a; }
+        .bg-red { background: #ef4444; color: white; }
+
+        /* Footer y responsive */
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .section h2 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="main-header">
+        <h1><i class="fas fa-users-viewfinder"></i> Gestión del Proyecto</h1>
+        <p>Cierre de Brechas – Plan de acción colaborativo, validación y mitigación de riesgos</p>
+    </div>
+
+    <!-- Matriz de Responsabilidades (sin asignación fija individual) -->
+    <div class="section">
+        <h2><i class="fas fa-users-gear"></i> Integrantes del Grupo</h2>
+        <div class="grid-4">
+            <div class="card">
+                <div class="card-header">
+                    <div class="avatar">VC</div>
+                    <div><h3>Vilca Cayo, Mirian Esther</h3><span class="role-badge">Equipo</span></div>
+                </div>
+                <ul class="checklist"><li>Participación activa en todas las fases</li><li>Apoyo en definición de brechas</li></ul>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="avatar">VV</div>
+                    <div><h3>Valero Quispe, Alex Johnny</h3><span class="role-badge">Equipo</span></div>
+                </div>
+                <ul class="checklist"><li>Colaboración en validación técnica</li><li>Investigación de mercado</li></ul>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="avatar">SP</div>
+                    <div><h3>Salcedo Pumacallahui, Aida Yulinda</h3><span class="role-badge">Equipo</span></div>
+                </div>
+                <ul class="checklist"><li>Entrevistas a usuarios potenciales</li><li>Documentación de feedback</li></ul>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="avatar">VF</div>
+                    <div><h3>Vilca Felipe, Jonathan Anthoniel</h3><span class="role-badge">Equipo</span></div>
+                </div>
+                <ul class="checklist"><li>Soporte en logística y recursos</li><li>Gestión de alianzas iniciales</li></ul>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="avatar">QM</div>
+                    <div><h3>Quispe Mamani, Fanny Yasmena</h3><span class="role-badge">Equipo</span></div>
+                </div>
+                <ul class="checklist"><li>Análisis financiero preliminar</li><li>Estructuración de presupuestos</li></ul>
+            </div>
+        </div>
+        <p style="margin-top: 15px; font-style: italic; color: #94a3b8;"><i class="fas fa-info-circle"></i> Aún no hay responsables específicos por tarea. Todos colaboran de forma transversal.</p>
+    </div>
+
+    <!-- Cronograma -->
+    <div class="section">
+        <h2><i class="fas fa-calendar-days"></i> Cronograma de Trabajo (4 Semanas)</h2>
+        <div class="timeline-container">
+            <div class="week-column"><div class="week-title">Semana 1 <span>Refinamiento</span></div>
+                <div class="task-item"><strong>Redactar borrador del pitch</strong><div class="task-meta"><span class="res-pill">Equipo</span><span>Marketing</span></div></div>
+                <div class="task-item"><strong>Primer acercamiento a números</strong><div class="task-meta"><span class="res-pill">Equipo</span><span>Finanzas</span></div></div>
+                <div class="task-item"><strong>Lista de posibles validadores</strong><div class="task-meta"><span class="res-pill">Equipo</span><span>Investigación</span></div></div>
+            </div>
+            <div class="week-column"><div class="week-title">Semana 2 <span>Validación</span></div>
+                <div class="task-item"><strong>Testeo con usuarios reales</strong><div class="task-meta"><span class="res-pill">Equipo</span><span>Campo</span></div></div>
+                <div class="task-item"><strong>Documentar feedback y mejoras</strong><div class="task-meta"><span class="res-pill">Equipo</span><span>Análisis</span></div></div>
+            </div>
+            <div class="week-column"><div class="week-title">Semana 3 <span>Presentación</span></div>
+                <div class="task-item"><strong>Diseño de slides del pitch</strong><div class="task-meta"><span class="res-pill">Equipo</span><span>Diseño</span></div></div>
+                <div class="task-item"><strong>Simulacro de pitch (5 min)</strong><div class="task-meta"><span class="res-pill">Equipo</span><span>Ensayos</span></div></div>
+            </div>
+            <div class="week-column"><div class="week-title">Semana 4 <span>Ajustes finales</span></div>
+                <div class="task-item"><strong>Últimas correcciones</strong><div class="task-meta"><span class="res-pill">Equipo</span><span>Feedback</span></div></div>
+                <div class="task-item"><strong>Preparar respaldo de riesgos</strong><div class="task-meta"><span class="res-pill">Equipo</span><span>Estrategia</span></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Validación y Riesgos (dos columnas) -->
+    <div class="grid-2">
+        <div class="section">
+            <h2><i class="fas fa-flask"></i> Validación del Concepto</h2>
+            <div class="card"><div class="card-header"><i class="fas fa-mobile-screen" style="color:#3b82f6; font-size:1.5rem;"></i><h3>Prototipo App</h3></div><p>Mockup en Figma, prueba con 5 usuarios reales.</p></div>
+            <div class="card"><div class="card-header"><i class="fas fa-box-archive" style="color:#3b82f6; font-size:1.5rem;"></i><h3>Almacenamiento</h3></div><p>Simulación de ubicación de tachos (geolocalización).</p></div>
+            <div class="card"><div class="card-header"><i class="fas fa-gift" style="color:#3b82f6; font-size:1.5rem;"></i><h3>Incentivos</h3></div><p>Prueba de motivación con 10 usuarios (puntos/canje).</p></div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-triangle-exclamation"></i> Matriz de Riesgos</h2>
+            <div class="risk-card risk-alto"><h3>1. No identificación comunitaria</h3><div class="risk-metrics"><span class="metric-tag bg-yellow">Probabilidad: Media</span><span class="metric-tag bg-red">Impacto: Alto</span></div><p>Mitigación: Talleres de co-creación con vecinos.</p></div>
+            <div class="risk-card risk-bajo"><h3>2. Viabilidad técnica subterránea</h3><div class="risk-metrics"><span class="metric-tag" style="background:#dcfce7; color:#166534">Probabilidad: Baja</span><span class="metric-tag bg-red">Impacto: Crítico</span></div><p>Mitigación: Validación con ingeniero sanitario.</p></div>
+            <div class="risk-card risk-medio"><h3>3. Falta de presupuesto municipal</h3><div class="risk-metrics"><span class="metric-tag bg-yellow">Probabilidad: Media</span><span class="metric-tag bg-red">Impacto: Alto</span></div><p>Mitigación: Alianzas público-privadas y crowdfunding.</p></div>
+            <div class="risk-card risk-medio"><h3>4. Baja adopción de la App</h3><div class="risk-metrics"><span class="metric-tag bg-yellow">Probabilidad: Media</span><span class="metric-tag bg-red">Impacto: Alto</span></div><p>Mitigación: Diseño intuitivo + incentivos progresivos.</p></div>
+        </div>
+    </div>
+
+    <footer>
+        <i class="fas fa-people-arrows"></i> Equipo de Cierre de Brechas – Vilca, Valero, Salcedo, Vilca F., Quispe
+    </footer>
+</div>
+</body>
+</html>
